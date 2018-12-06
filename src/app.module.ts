@@ -12,6 +12,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { RolesModule } from './modules/roles/roles.module';
 import { AuthModule } from './modules/core/auth/auth.module';
+import { JournalModule } from './modules/journal/journal.module';
 // needle-module-import
 
 @Module({
@@ -35,6 +36,7 @@ import { AuthModule } from './modules/core/auth/auth.module';
     AuthModule,
     UserModule,
     RolesModule,
+    JournalModule,
     // needle-module-includes
   ],
   controllers: [AppController],
