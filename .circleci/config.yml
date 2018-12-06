@@ -118,7 +118,6 @@ jobs:
   back-deploy-heroku:
     docker:
       - image: buildpack-deps:trusty
-    working_directory: ~/deploy
     steps:
       - run:
           name: Run setup script
