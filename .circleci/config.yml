@@ -1,0 +1,149 @@
+version: 2
+jobs:
+  ##########################################################################
+  #  SHARED STEPS
+  ##########################################################################
+  build:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - $CACHE_VERSION-dependencies-
+      - run: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+  lint:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+      - run: yarn lint
+      - run: yarn format:check
+
+  ##########################################################################
+  #  DOCS
+  ##########################################################################
+  server-doc-build:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+      - run: yarn doc:build
+      - run:
+          name: Copy deployment artifacts to workspace
+          command: |
+            cp doc-server/ /tmp/server-doc -r
+      - store_artifacts:
+          path: /tmp/server-doc
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - server-doc
+  server-doc-deploy:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/deploy-doc-server
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Deploy app
+          command: yarn add netlify-cli && yarn netlify deploy -d /tmp/server-doc -a $NETLIFY_TOKEN -s $NETLIFY_SITE_DOC_SERVER -p
+  ##########################################################################
+  #  BACK SPECIFIC
+  ##########################################################################
+  back-test-unit:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+      - run: yarn test:ci
+      - run: yarn add codecov && yarn codecov
+  back-test-e2e:
+    docker:
+      - image: circleci/node:8.11
+      - image: circleci/postgres:9.6.5
+        environment:
+          POSTGRES_DB: psqluer
+          POSTGRES_USER: psqluer
+          POSTGRES_PASSWORD: psqlpassword
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+      - run: yarn test:e2e
+  back-build:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: TODO
+          command: echo "TODO"
+  back-deploy:
+    docker:
+      - image: circleci/node:8.11
+    working_directory: ~/deploy
+    steps:
+      # why rebuild something we already tested, rebuilding invalidates any previous confidence?!
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: TODO
+          command: echo "TODO"
+
+workflows:
+  version: 2
+  build-test-and-lint:
+    jobs:
+      - build
+      - back-test-unit:
+          requires:
+            - build
+      - back-test-e2e:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build
+      - back-build:
+          requires:
+            - build
+            - lint
+            - back-test-e2e
+            - back-test-unit
+      - back-deploy:
+          requires:
+            - back-build
+          filters:
+            branches:
+              only: master
+      - server-doc-build:
+          requires:
+            - back-build
+      - server-doc-deploy:
+          requires:
+            - server-doc-build
+          filters:
+            branches:
+              only: master
