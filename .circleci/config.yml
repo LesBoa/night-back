@@ -89,18 +89,33 @@ jobs:
       - restore_cache:
           key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
       - run: yarn test:e2e
-  back-build:
+
+  docker-build-and-push:
+    working_directory: /dockerapp
     docker:
-      - image: circleci/node:dubnium-browsers
-    working_directory: ~/repo
+      - image: docker:17.05.0-ce-git
     steps:
       - checkout
-      - restore_cache:
-          key: $CACHE_VERSION-dependencies-{{ checksum "package.json" }}
+      - setup_remote_docker
       - run:
-          name: TODO
-          command: echo "TODO"
-  back-deploy:
+          name: Install dependencies
+          command: |
+            apk add --no-cache py-pip=9.0.0-r1
+            pip install docker-compose==1.15.0
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build --cache-from=app -t app .
+      - deploy:
+          name: Publish application to docker hub
+          command: |
+            docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
+            docker tag app $DOCKER_HUB_USER_ID/lost-back:$CIRCLE_BUILD_NUM
+            docker tag app $DOCKER_HUB_USER_ID/lost-back:latest
+            docker push $DOCKER_HUB_USER_ID/lost-back:$CIRCLE_BUILD_NUM
+            docker push $DOCKER_HUB_USER_ID/lost-back:latest
+
+  back-deploy-heroku:
     docker:
       - image: circleci/node:dubnium-browsers
     working_directory: ~/deploy
@@ -126,24 +141,24 @@ workflows:
       - lint:
           requires:
             - build
-      - back-build:
+      - docker-build-and-push:
           requires:
             - build
             - lint
             - back-test-e2e
             - back-test-unit
-      - back-deploy:
+      - back-deploy-heroku:
           requires:
-            - back-build
+            - docker-build-and-push
           filters:
             branches:
-              only: master
+              only: develop
       - server-doc-build:
           requires:
-            - back-build
+            - docker-build-and-push
       - server-doc-deploy:
           requires:
             - server-doc-build
           filters:
             branches:
-              only: master
+              only: develop

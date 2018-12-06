@@ -1,0 +1,45 @@
+version: '3'
+services:
+  lost-nestjs-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - IS_AUTH_ENABLED=false
+      - API_PORT=3030
+      - API_HOST=localhost
+      - APP_URL=toto.fr
+      - LOG_LEVEL=info
+      - DATABASE_URL=postgres://flow:mappingpasswd@flow-postgresql:5432/flow
+      - JWT_SECRET=bananana
+      - SEARCH_APP_ID=JVZSIZ0C3W
+      - SEARCH_APP_ADMIN_KEY=07891af69c2c4ac9db4f4b85b5d887d0
+    ports:
+      - 3030:3030
+    depends_on:
+      - lost-postgresql
+    networks:
+      - intra
+      - web
+    labels:
+      traefik.enable: true
+      traefik.frontend.rule: Host:api.lost.docker.localhost
+
+  lost-postgresql:
+    image: postgres:9.6.5
+    # volumes:
+    #     - ~/volumes/flow/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=flow
+      - POSTGRES_PASSWORD=mappingpasswd
+    ports:
+      - 5432:5432
+    networks:
+      - intra
+    labels:
+      traefik.enable: false
+
+networks:
+  intra:
+  web:
+    external: true
