@@ -21,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { JournalDto } from './journal.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'decorators/currentUser.decorator';
+import { CurrentUser } from '../../decorators/currentUser.decorator';
 import { User } from '../user/user.entity';
 
 @ApiUseTags('Journal')
