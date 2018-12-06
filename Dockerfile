@@ -1,7 +1,10 @@
-FROM node:7-alpine
-WORKDIR /app
-COPY package.json /app
-RUN npm install
-COPY . /app
-CMD node index.js
-EXPOSE 3000
+FROM node:9
+
+WORKDIR /nest-server
+
+COPY . .
+
+RUN yarn install \
+
+
+CMD ["yarn", "server:start"]
