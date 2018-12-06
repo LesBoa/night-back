@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as Joi from 'joi';
-import { parse } from 'dotenv';
-import * as fs from 'fs';
+import { config as parseConfig } from 'dotenv';
 
 interface EnvConfig {
   [key: string]: any;
@@ -12,8 +11,9 @@ export class ConfigService {
   private readonly envConfig: EnvConfig;
 
   constructor() {
-    const config = parse(fs.readFileSync('.env'));
-    this.envConfig = this.validateInput(config);
+    parseConfig();
+
+    this.envConfig = this.validateInput(process.env);
   }
 
   /**
@@ -39,6 +39,9 @@ export class ConfigService {
     const { error, value: validatedEnvConfig } = Joi.validate(
       envConfig,
       envVarsSchema,
+      {
+        stripUnknown: true,
+      },
     );
     if (error) {
       throw new Error(`Config validation error: ${error.message}`);
