@@ -16,11 +16,9 @@ export abstract class DbAuditModel {
   id: number;
 
   @CreateDateColumn()
-  @Exclude()
   creationDate: Date;
 
   @UpdateDateColumn()
-  @Exclude()
   updateDate: Date;
 
   @VersionColumn()

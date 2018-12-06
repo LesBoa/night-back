@@ -2,6 +2,7 @@ import { DbAuditModel } from '../../utils/dbmodel.model';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Journal } from '../journal/journal.entity';
 
 @Entity()
 export class User extends DbAuditModel {
@@ -20,4 +21,7 @@ export class User extends DbAuditModel {
   @Column()
   @Exclude()
   password: string;
+
+  @OneToMany(type => Journal, journal => journal.user)
+  journaux: Journal[];
 }
