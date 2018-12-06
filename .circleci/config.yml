@@ -159,13 +159,19 @@ workflows:
             - back-test-unit
       - back-deploy-heroku:
           requires:
-            - docker-build-and-push
+            - build
+            - lint
+            - back-test-e2e
+            - back-test-unit
           filters:
             branches:
               only: develop
       - server-doc-build:
           requires:
-            - docker-build-and-push
+            - build
+            - lint
+            - back-test-e2e
+            - back-test-unit
       - server-doc-deploy:
           requires:
             - server-doc-build
