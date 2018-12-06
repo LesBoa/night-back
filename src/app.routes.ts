@@ -20,6 +20,14 @@ export const appRoutes: Routes = [
     module: AuthController,
   },
   {
+    path: '/todolist-items',
+    module: TodolistItemModule,
+  },
+  {
+    path: '/item-tags',
+    module: ItemTagModule,
+  },
+  {
     path: '/journals',
     module: JournalModule,
   },
