@@ -1,0 +1,6 @@
+{
+  "port": 9911,
+  "name": "Nuit info server",
+  "output": "doc-server",
+  "tsconfig": "./tsconfig.json"
+}
