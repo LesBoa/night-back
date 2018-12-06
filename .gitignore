@@ -240,3 +240,4 @@ $RECYCLE.BIN/
 
 .env
 doc-server
+.netlify
