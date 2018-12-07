@@ -39,6 +39,8 @@ import { JournalModule } from './modules/journal/journal.module';
     UserModule,
     RolesModule,
     JournalModule,
+    TodolistItemModule,
+    ItemTagModule,
     // needle-module-includes
   ],
   controllers: [AppController],

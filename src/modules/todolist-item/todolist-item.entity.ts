@@ -2,6 +2,8 @@ import { DbAuditModel } from '../../utils/dbmodel.model';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { ItemTag } from '../item-tag/item-tag.entity';
+import { User } from '../user/user.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class TodolistItem extends DbAuditModel {
@@ -33,8 +35,12 @@ export class TodolistItem extends DbAuditModel {
   @ApiModelProperty()
   isDone: boolean;
 
-  @Column()
   @ApiModelProperty()
   @OneToMany(type => ItemTag, itemTag => itemTag.todolistItem)
   tags: ItemTag[];
+
+  @ApiModelProperty({ required: true })
+  @ManyToOne(type => User, user => user.journaux, { onDelete: 'CASCADE' })
+  @Exclude()
+  user: User;
 }

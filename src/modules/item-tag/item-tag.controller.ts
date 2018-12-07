@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ItemTag } from './item-tag.entity';
 import { ItemTagService } from './item-tag.service';
@@ -19,10 +20,14 @@ import {
   ApiUseTags,
 } from '@nestjs/swagger';
 import { ItemTagDto } from './item-tag.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from 'decorators/currentUser.decorator';
+import { User } from '../user/user.entity';
 
 @ApiUseTags('Item tag')
 @Controller()
-// @ApiBearerAuth()
+@ApiBearerAuth()
+@UseGuards(AuthGuard())
 export class ItemTagController {
   constructor(private readonly itemTagService: ItemTagService) {}
 
@@ -37,14 +42,28 @@ export class ItemTagController {
     return this.itemTagService.getAll();
   }
 
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: `Get a list of user's journal`,
+    type: ItemTag,
+    isArray: true,
+  })
+  getAllbyUser(@CurrentUser() loggedUser: User): Promise<ItemTag[]> {
+    return this.itemTagService.getAllByUser(loggedUser);
+  }
+
   @Post()
   @ApiResponse({
     status: 201,
     description: 'The Item tag has been created.',
     type: ItemTag,
   })
-  saveNew(@Body() itemTagDto: ItemTagDto): Promise<ItemTag> {
-    return this.itemTagService.saveNew(itemTagDto);
+  saveNew(
+    @Body() itemTagDto: ItemTagDto,
+    @CurrentUser() loggedUser: User,
+  ): Promise<ItemTag> {
+    return this.itemTagService.saveNew(itemTagDto, loggedUser);
   }
 
   @Get(':id')
@@ -54,8 +73,11 @@ export class ItemTagController {
     type: ItemTag,
   })
   @ApiResponse({ status: 404, description: 'Not found.' })
-  async findOne(@Param('id', new ParseIntPipe()) id: number): Promise<ItemTag> {
-    return (await this.itemTagService.getOneById(id)).orElseThrow(
+  async findOne(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser() loggedUser: User,
+  ): Promise<ItemTag> {
+    return (await this.itemTagService.getOneById(id, loggedUser)).orElseThrow(
       () => new NotFoundException(),
     );
   }
@@ -70,8 +92,9 @@ export class ItemTagController {
   async updateOne(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() itemTagDto: ItemTagDto,
+    @CurrentUser() loggedUser: User,
   ): Promise<ItemTag> {
-    return this.itemTagService.update(id, itemTagDto);
+    return this.itemTagService.update(id, itemTagDto, loggedUser);
   }
 
   @Delete(':id')
@@ -80,7 +103,10 @@ export class ItemTagController {
     description: 'The Item tag with the matching id was deleted',
   })
   @ApiResponse({ status: 404, description: 'Not found.' })
-  async deleteOne(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
-    await this.itemTagService.deleteById(id);
+  async deleteOne(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser() loggedUser: User,
+  ): Promise<void> {
+    await this.itemTagService.deleteById(id, loggedUser);
   }
 }
