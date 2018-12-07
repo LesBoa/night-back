@@ -11,10 +11,6 @@ export class HealthInfo extends DbAuditModel {
   @ApiModelProperty()
   value: number;
 
-  @Column()
-  @ApiModelProperty()
-  type: HealthType;
-
   @ApiModelProperty({ required: true })
   @ManyToOne(type => HealthType, healthType => healthType.healthInfos, {
     onDelete: 'CASCADE',

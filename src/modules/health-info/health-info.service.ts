@@ -32,7 +32,7 @@ export class HealthInfoService {
     let healthInfoNew = new HealthInfo();
 
     healthInfoNew.value = body.value;
-    healthInfoNew.type = body.healthType;
+    healthInfoNew.healthType = body.healthType;
 
     healthInfoNew = await this.healthInfoRepository.save(healthInfoNew);
 
