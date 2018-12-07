@@ -9,8 +9,6 @@ import { ItemTagModule } from './modules/item-tag/item-tag.module';
 import { HealthInfoModule } from './modules/health-info/health-info.module';
 import { HealthTypeModule } from './modules/health-type/health-type.module';
 
-import { TodolistItemModule } from './modules/todolist-item/todolist-item.module';
-import { ItemTagModule } from './modules/item-tag/item-tag.module';
 // needle-module-import
 
 export const appRoutes: Routes = [
