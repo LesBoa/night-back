@@ -47,6 +47,8 @@ import { HealthTypeModule } from './modules/health-type/health-type.module';
     HealthInfoModule,
     HealthTypeModule,
 
+    TodolistItemModule,
+    ItemTagModule,
     // needle-module-includes
   ],
   controllers: [AppController],
