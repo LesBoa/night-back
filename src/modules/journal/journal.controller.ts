@@ -34,17 +34,6 @@ export class JournalController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'Get a list of all Journal.',
-    type: Journal,
-    isArray: true,
-  })
-  getAll(): Promise<Journal[]> {
-    return this.journalService.getAll();
-  }
-
-  @Get()
-  @ApiResponse({
-    status: 200,
     description: `Get a list of user's journal`,
     type: Journal,
     isArray: true,

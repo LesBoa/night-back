@@ -14,6 +14,7 @@ import { RolesModule } from './modules/roles/roles.module';
 import { AuthModule } from './modules/core/auth/auth.module';
 import { JournalModule } from './modules/journal/journal.module';
 import { StocksModule } from './modules/stocks/stocks.module';
+import { ActionModule } from './modules/action/action.module';
 // needle-module-import
 
 @Module({
@@ -39,6 +40,7 @@ import { StocksModule } from './modules/stocks/stocks.module';
     RolesModule,
     JournalModule,
     StocksModule,
+    ActionModule,
     // needle-module-includes
   ],
   controllers: [AppController],

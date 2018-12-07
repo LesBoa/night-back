@@ -1,17 +1,28 @@
 import { Stocks } from './stocks.entity';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StocksRepository } from './stocks.repository';
 import { StocksDto } from './stocks.dto';
 import Optional from 'typescript-optional';
 import { User } from '../user/user.entity';
 import { CurrentUser } from '../../decorators/currentUser.decorator';
+import { ActionService } from '../action/action.service';
+import { ActionDto } from '../action/action.dto';
+import { Action } from '../action/action.entity';
 
 @Injectable()
 export class StocksService {
   constructor(
     @InjectRepository(StocksRepository)
     private readonly stocksRepository: StocksRepository,
+    @Inject(forwardRef(() => ActionService))
+    private readonly actionService: ActionService,
   ) {}
 
   async getAll(): Promise<Stocks[]> {
@@ -61,5 +72,33 @@ export class StocksService {
       loggedUser,
     )).orElseThrow(() => new NotFoundException());
     await this.stocksRepository.remove(stocksFound);
+  }
+
+  async addAction(
+    body: ActionDto,
+    id: number,
+    loggedUser: User,
+  ): Promise<Action> {
+    const actionsFounds: Action[] = await this.actionService.getAllByUser(
+      loggedUser,
+    );
+    let variationTotale = 0;
+    actionsFounds.forEach(action => {
+      variationTotale += action.quantity;
+    });
+    const actionNew = new Action();
+    const stocksFound = (await this.stocksRepository.findOneById(
+      id,
+      loggedUser,
+    )).orElseThrow(() => new NotFoundException());
+
+    if (stocksFound.quantity > variationTotale) {
+      actionNew.name = body.name;
+      actionNew.quantity = body.quantity;
+      actionNew.icon = body.icon;
+      actionNew.stocks = stocksFound;
+      actionNew.user = loggedUser;
+      return await this.actionService.saveNew(actionNew);
+    } else throw new BadRequestException();
   }
 }

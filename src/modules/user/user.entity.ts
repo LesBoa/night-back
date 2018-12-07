@@ -4,6 +4,7 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Journal } from '../journal/journal.entity';
 import { Stocks } from '../stocks/stocks.entity';
+import { Action } from '../action/action.entity';
 
 @Entity()
 export class User extends DbAuditModel {
@@ -28,4 +29,7 @@ export class User extends DbAuditModel {
 
   @OneToMany(type => Stocks, stocks => stocks.user)
   stocks: Stocks[];
+
+  @OneToMany(type => Action, actions => actions.user)
+  actions: Action[];
 }
