@@ -9,7 +9,7 @@ import { ItemTagModule } from './modules/item-tag/item-tag.module';
 import { HealthInfoModule } from './modules/health-info/health-info.module';
 import { HealthTypeModule } from './modules/health-type/health-type.module';
 import { StocksModule } from './modules/stocks/stocks.module';
-
+import { ActionModule } from './modules/action/action.module';
 // needle-module-import
 
 export const appRoutes: Routes = [
@@ -48,6 +48,10 @@ export const appRoutes: Routes = [
   {
     path: 'stocks',
     module: StocksModule,
+  },
+  {
+    path: '/actions',
+    module: ActionModule,
   },
   // needle-modules-routes
 ];

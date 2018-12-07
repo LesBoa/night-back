@@ -20,7 +20,7 @@ import { HealthInfoModule } from './modules/health-info/health-info.module';
 import { HealthTypeModule } from './modules/health-type/health-type.module';
 
 import { StocksModule } from './modules/stocks/stocks.module';
-
+import { ActionModule } from './modules/action/action.module';
 // needle-module-import
 
 @Module({
@@ -55,6 +55,7 @@ import { StocksModule } from './modules/stocks/stocks.module';
     ItemTagModule,
 
     StocksModule,
+    ActionModule,
     // needle-module-includes
   ],
   controllers: [AppController],
