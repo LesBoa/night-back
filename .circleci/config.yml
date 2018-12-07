@@ -119,6 +119,7 @@ jobs:
     docker:
       - image: buildpack-deps:trusty
     steps:
+      - checkout
       - run:
           name: Run setup script
           command: bash .circleci/setup_heroku.sh
