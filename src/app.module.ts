@@ -19,6 +19,8 @@ import { JournalModule } from './modules/journal/journal.module';
 import { HealthInfoModule } from './modules/health-info/health-info.module';
 import { HealthTypeModule } from './modules/health-type/health-type.module';
 
+import { StocksModule } from './modules/stocks/stocks.module';
+
 // needle-module-import
 
 @Module({
@@ -51,6 +53,8 @@ import { HealthTypeModule } from './modules/health-type/health-type.module';
 
     TodolistItemModule,
     ItemTagModule,
+
+    StocksModule,
     // needle-module-includes
   ],
   controllers: [AppController],
