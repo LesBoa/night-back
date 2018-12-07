@@ -21,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { TodolistItemDto } from './todolist-item.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'decorators/currentUser.decorator';
+import { CurrentUser } from '../../decorators/currentUser.decorator';
 import { User } from '../user/user.entity';
 
 @ApiUseTags('Todolist item')
