@@ -3,7 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Journal } from '../journal/journal.entity';
-import { Stocks } from '../stocks/stocks.entity';
+import { HealthInfo } from '../health-info/health-info.entity';
 
 @Entity()
 export class User extends DbAuditModel {
@@ -26,6 +26,6 @@ export class User extends DbAuditModel {
   @OneToMany(type => Journal, journal => journal.user)
   journaux: Journal[];
 
-  @OneToMany(type => Stocks, stocks => stocks.user)
-  stocks: Stocks[];
+  @OneToMany(type => HealthInfo, healthInfo => healthInfo.user)
+  healthInfos: HealthInfo[];
 }
