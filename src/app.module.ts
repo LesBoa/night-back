@@ -43,6 +43,8 @@ import { HealthTypeModule } from './modules/health-type/health-type.module';
     UserModule,
     RolesModule,
     JournalModule,
+    TodolistItemModule,
+    ItemTagModule,
 
     HealthInfoModule,
     HealthTypeModule,
