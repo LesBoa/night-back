@@ -17,12 +17,12 @@ export class JournalService {
     return this.journalRepository.find({});
   }
 
-  async getOneById(id: number, loggedUser: User): Promise<Optional<Journal>> {
-    return this.journalRepository.findOneById(id, loggedUser);
-  }
-
   async getAllByUser(user: User): Promise<Journal[]> {
     return this.journalRepository.findAllByUser(user);
+  }
+
+  async getOneById(id: number, loggedUser: User): Promise<Optional<Journal>> {
+    return this.journalRepository.findOneById(id, loggedUser);
   }
 
   async saveNew(body: JournalDto, loggedUser: User): Promise<Journal> {

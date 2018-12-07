@@ -4,6 +4,8 @@ import { UserModule } from './modules/user/user.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { AuthController } from './modules/core/auth/auth.controller';
 import { JournalModule } from './modules/journal/journal.module';
+import { TodolistItemModule } from './modules/todolist-item/todolist-item.module';
+import { ItemTagModule } from './modules/item-tag/item-tag.module';
 import { HealthInfoModule } from './modules/health-info/health-info.module';
 import { HealthTypeModule } from './modules/health-type/health-type.module';
 
@@ -21,6 +23,14 @@ export const appRoutes: Routes = [
   {
     path: '/auth',
     module: AuthController,
+  },
+  {
+    path: '/todolist-items',
+    module: TodolistItemModule,
+  },
+  {
+    path: '/item-tags',
+    module: ItemTagModule,
   },
   {
     path: '/journals',
