@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as Joi from 'joi';
-import { parse } from 'dotenv';
-import * as fs from 'fs';
+import { config as parseConfig } from 'dotenv';
 
 interface EnvConfig {
   [key: string]: any;
@@ -12,8 +11,11 @@ export class ConfigService {
   private readonly envConfig: EnvConfig;
 
   constructor() {
-    const config = parse(fs.readFileSync('.env'));
-    this.envConfig = this.validateInput(config);
+    try {
+      parseConfig();
+    } catch (e) {}
+
+    this.envConfig = this.validateInput(process.env);
   }
 
   /**
@@ -25,7 +27,7 @@ export class ConfigService {
       NODE_ENV: Joi.string()
         .valid(['development', 'production', 'test', 'provision'])
         .default('development'),
-      API_PORT: Joi.number().default(3000),
+      PORT: Joi.number().default(3000),
       API_HOST: Joi.string().default('localhost'),
       API_PROTOCOL: Joi.string().default('http'),
       LOG_LEVEL: Joi.string()
@@ -39,6 +41,9 @@ export class ConfigService {
     const { error, value: validatedEnvConfig } = Joi.validate(
       envConfig,
       envVarsSchema,
+      {
+        stripUnknown: true,
+      },
     );
     if (error) {
       throw new Error(`Config validation error: ${error.message}`);
@@ -63,6 +68,6 @@ export class ConfigService {
   }
 
   get port(): number {
-    return this.envConfig.API_PORT;
+    return this.envConfig.PORT;
   }
 }

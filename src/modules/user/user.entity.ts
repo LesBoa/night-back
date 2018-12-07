@@ -3,6 +3,8 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Journal } from '../journal/journal.entity';
+import { HealthInfo } from '../health-info/health-info.entity';
+import { Stocks } from '../stocks/stocks.entity';
 import { TodolistItem } from '../todolist-item/todolist-item.entity';
 import { ItemTag } from '../item-tag/item-tag.entity';
 
@@ -32,4 +34,10 @@ export class User extends DbAuditModel {
 
   @OneToMany(type => ItemTag, itemTag => itemTag.user)
   itemTags: ItemTag[];
+
+  @OneToMany(type => HealthInfo, healthInfo => healthInfo.user)
+  healthInfos: HealthInfo[];
+
+  @OneToMany(type => Stocks, stocks => stocks.user)
+  stocks: Stocks[];
 }
