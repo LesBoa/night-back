@@ -11,7 +11,9 @@ export class ConfigService {
   private readonly envConfig: EnvConfig;
 
   constructor() {
-    parseConfig();
+    try {
+      parseConfig();
+    } catch (e) {}
 
     this.envConfig = this.validateInput(process.env);
   }
