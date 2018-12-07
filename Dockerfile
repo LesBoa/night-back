@@ -1,10 +1,10 @@
-FROM node:9
+FROM node:dubnium
 
 WORKDIR /nest-server
 
 COPY . .
 
-RUN yarn install \
+RUN yarn install
 
 
-CMD ["yarn", "server:start"]
+CMD ["yarn", "start"]
