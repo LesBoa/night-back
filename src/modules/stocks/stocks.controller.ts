@@ -111,4 +111,28 @@ export class StocksController {
   ): Promise<Action> {
     return this.stocksService.addAction(actionDto, id, loggedUser);
   }
+
+  @Get(':id/actions')
+  @ApiResponse({
+    status: 200,
+    description: `Return the stock's actions`,
+  })
+  async getActions(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser() loggedUser: User,
+  ): Promise<Action[]> {
+    return this.stocksService.getActions(id, loggedUser);
+  }
+
+  @Get(':id/quantite')
+  @ApiResponse({
+    status: 200,
+    description: `Return the stock's current quantity`,
+  })
+  async getQuantity(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser() loggedUser: User,
+  ): Promise<number> {
+    return this.stocksService.getQuantity(id, loggedUser);
+  }
 }

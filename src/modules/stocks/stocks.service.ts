@@ -92,7 +92,7 @@ export class StocksService {
       loggedUser,
     )).orElseThrow(() => new NotFoundException());
 
-    if (stocksFound.quantity > variationTotale) {
+    if (stocksFound.quantity + variationTotale > 0) {
       actionNew.name = body.name;
       actionNew.quantity = body.quantity;
       actionNew.icon = body.icon;
@@ -100,5 +100,28 @@ export class StocksService {
       actionNew.user = loggedUser;
       return await this.actionService.saveNew(actionNew);
     } else throw new BadRequestException();
+  }
+
+  async getQuantity(id: number, loggedUser: User): Promise<number> {
+    const actionsFounds: Action[] = await this.actionService.getAllByUser(
+      loggedUser,
+    );
+    let variationTotale = 0;
+    actionsFounds.forEach(action => {
+      variationTotale += action.quantity;
+    });
+    const stocksFound = (await this.stocksRepository.findOneById(
+      id,
+      loggedUser,
+    )).orElseThrow(() => new NotFoundException());
+    return stocksFound.quantity + variationTotale;
+  }
+
+  async getActions(id: number, loggedUser: User): Promise<Action[]> {
+    const stocksFound = (await this.stocksRepository.findOneById(
+      id,
+      loggedUser,
+    )).orElseThrow(() => new NotFoundException());
+    return await this.actionService.getAllByStocks(stocksFound, loggedUser);
   }
 }
