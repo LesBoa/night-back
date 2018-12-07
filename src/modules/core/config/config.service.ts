@@ -27,7 +27,7 @@ export class ConfigService {
       NODE_ENV: Joi.string()
         .valid(['development', 'production', 'test', 'provision'])
         .default('development'),
-      API_PORT: Joi.number().default(3000),
+      PORT: Joi.number().default(3000),
       API_HOST: Joi.string().default('localhost'),
       API_PROTOCOL: Joi.string().default('http'),
       LOG_LEVEL: Joi.string()
@@ -68,6 +68,6 @@ export class ConfigService {
   }
 
   get port(): number {
-    return this.envConfig.API_PORT;
+    return this.envConfig.PORT;
   }
 }
